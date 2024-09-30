@@ -9,6 +9,7 @@ import cat.tecnocampus.fgcstations.persistence.StationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FgcStationService {
@@ -20,24 +21,31 @@ public class FgcStationService {
 
     public List<StationDTO> getStationsDTO() {
         //TODO 1: get all stations (see the returned type)
-        return null;
+        List<StationDTO> stations = stationRepository.findAllDTO();
+        return stations;
     }
 
     public List<Station> getStationsDomain() {
         //TODO 2: get all stations (see you return a domain Station). Actually you don't need to leave this file
         // in order to complete this exercise
-        return null;
+        List<Station> stations = stationRepository.findAll();
+        return stations;
     }
 
     public Station getStation(String name) {
         // TODO 3: get a station by name (see the returned type). If the station does not exist, throw a StationDoesNotExistsException
         //  you won't need to write any sql (jpql) query
-        return null;
+        Optional<Station> station = stationRepository.findById(name);
+        if (station.isEmpty()) {
+            throw new StationDoesNotExistsException(name);
+        }
+        return station.get();
     }
 
     public StationDTO getStationDTO(String name) {
         // TODO 4: get a station by name (see the returned type). If the station does not exist, throw a StationDoesNotExistsException
-        return null;
+        return stationRepository.findDTOById(name)
+                .orElseThrow(() -> new StationDoesNotExistsException(name));
     }
 
     public List<StationTopFavoriteJourney> getStationsOrderedByFavoriteJourneysAsEitherOriginOrDestination() {

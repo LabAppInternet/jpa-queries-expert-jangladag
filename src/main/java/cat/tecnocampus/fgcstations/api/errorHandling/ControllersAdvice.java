@@ -48,7 +48,7 @@ public class ControllersAdvice {
     public String handleNoStation (HttpServletRequest request, Exception ex) {
         String url = request.getRequestURL().toString();
         logger.error("Request: " + url + " raised " + ex);
-        return "Station not found";
+        return ex.getMessage();
     }
 
 }

@@ -42,6 +42,4 @@ public class MapperHelper {
         return userFriendsDTO.getFriends().stream().map(f -> new Friend(user,f)).toList();
     }
 
-
-
 }

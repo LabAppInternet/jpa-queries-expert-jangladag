@@ -1,6 +1,7 @@
 package cat.tecnocampus.fgcstations.application;
 
 import cat.tecnocampus.fgcstations.application.DTOs.*;
+import cat.tecnocampus.fgcstations.application.exception.UserDoesNotExistsException;
 import cat.tecnocampus.fgcstations.application.mapper.MapperHelper;
 import cat.tecnocampus.fgcstations.domain.FavoriteJourney;
 import cat.tecnocampus.fgcstations.domain.Journey;
@@ -45,23 +46,26 @@ public class FcgUserService {
     public User getDomainUser(String username) {
         // TODO 10.1: get the user (domain) given her username. If the user does not exist, throw a UserDoesNotExistsException
         //  You can solve this exercise without leaving this file
-        return null;
+        return userRepository.findById(username)
+                .orElseThrow(() -> new UserDoesNotExistsException("No user has been found with username: "+username));
     }
-
 
     public UserDTOnoFJ getUserDTOWithNoFavoriteJourneys(String username) {
         // TODO 12: get the user (UserDTOnoFJ) given her username. If the user does not exist, throw a UserDoesNotExistsException
-        return null;
+        User user = getDomainUser(username);
+        return new UserDTOnoFJ(user.getUsername(), user.getName(), user.getSecondName(), user.getEmail());
     }
 
     public UserDTOInterface getUserDTOInterface(String username) {
         // TODO 13: get the user (UserDTOInterface) given her username. If the user does not exist, throw a UserDoesNotExistsException
+        User user = getDomainUser(username);
+        //FIXME: return UserDTOInterface?;
         return null;
     }
 
     public List<UserDTO> getUsers() {
         //TODO 14: get all users (domain). You can solve this exercise without leaving this file
-        List<User> users = new ArrayList<>(); //feed this list with the users
+        List<User> users = userRepository.findAll(); //feed this list with the users
 
         //get the users' favorite journeys
         users.forEach(u -> u.setFavoriteJourneyList(getFavoriteJourneys(u.getUsername())));

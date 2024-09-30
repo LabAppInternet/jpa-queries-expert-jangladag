@@ -10,4 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StationRepository extends JpaRepository<Station, String> {
+    @Query("SELECT s FROM Station s")
+    List<StationDTO> findAllDTO();
+
+    @Query("SELECT s FROM Station s WHERE s.name=:id")
+    Optional<StationDTO> findDTOById(String id);
 }
