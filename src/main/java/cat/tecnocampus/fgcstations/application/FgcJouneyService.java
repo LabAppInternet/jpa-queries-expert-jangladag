@@ -37,8 +37,6 @@ public class FgcJouneyService {
     public Journey getJourneyDomain(String origin, String destination) {
         // TODO 8: get a journey by origin and destination (domain). If the journey does not exist, throw a JourneyDoesNotExistsException
         //  try no to use any sql (jpql) query, just come up with an appropriate method name
-        // FIXME: Can I create a method to avoid the boilerplate?
-
         return journeyRepository.findJourneyByOriginNameAndDestinationName(origin, destination)
                 .orElseThrow(() -> new JourneyDoesNotExistsException(origin, destination));
     }

@@ -54,5 +54,7 @@ insert into friend(username, user_username, friend) values('tina', 'tina', 'pepe
 insert into friend(username, user_username, friend) values('tina', 'tina', 'pepa');
 insert into friend(username, user_username, friend) values('joanra', 'joanra', 'pepa');
 
+insert into friend(username, user_username, friend) values('joanra', 'joanra', 'maria');
+
 
 

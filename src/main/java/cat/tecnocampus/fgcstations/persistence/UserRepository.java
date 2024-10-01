@@ -11,4 +11,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, String> {
+
+    Optional<UserDTOnoFJ> findUserDTOnoFJByUsername(String username);
+
+    Optional<UserDTOInterface> findUserDTOInterfaceByUsername(String username);
+
+    @Query("SELECT f.user.username AS username, COUNT(f) AS numberOfFavoriteJourneys FROM FavoriteJourney f GROUP BY f.user.username ORDER BY COUNT(f) DESC")
+    List<UserTopFavoriteJourney> findTop3UsersWithMostFavoriteJourneys();
+
+    List<UserDTOInterface> findUserDTOInterfaceByNameAndSecondName(String username, String secondName);
 }

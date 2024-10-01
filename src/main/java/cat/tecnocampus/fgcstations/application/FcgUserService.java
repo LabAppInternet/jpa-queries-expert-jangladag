@@ -52,15 +52,14 @@ public class FcgUserService {
 
     public UserDTOnoFJ getUserDTOWithNoFavoriteJourneys(String username) {
         // TODO 12: get the user (UserDTOnoFJ) given her username. If the user does not exist, throw a UserDoesNotExistsException
-        User user = getDomainUser(username);
-        return new UserDTOnoFJ(user.getUsername(), user.getName(), user.getSecondName(), user.getEmail());
+        return userRepository.findUserDTOnoFJByUsername(username)
+                .orElseThrow(() -> new UserDoesNotExistsException("No user has been found with username: "+username));
     }
 
     public UserDTOInterface getUserDTOInterface(String username) {
         // TODO 13: get the user (UserDTOInterface) given her username. If the user does not exist, throw a UserDoesNotExistsException
-        User user = getDomainUser(username);
-        //FIXME: return UserDTOInterface?;
-        return null;
+        return userRepository.findUserDTOInterfaceByUsername(username)
+                .orElseThrow(() -> new UserDoesNotExistsException("No user has been found with username: "+username));
     }
 
     public List<UserDTO> getUsers() {
@@ -83,25 +82,27 @@ public class FcgUserService {
 
     public List<UserTopFavoriteJourney> getTop3UsersWithMostFavoriteJourneys() {
         // TODO 16: get the top 3 users (UserTopFavoriteJourney) with the most favorite journeys
-        return null;
+        // FIXME: Have to check it
+        return userRepository.findTop3UsersWithMostFavoriteJourneys();
+
     }
 
     public List<UserDTOInterface> getUsersByNameAndSecondName(String name, String secondName) {
         // TODO 17: get the users (UserDTOInterface) given their name and second name. Try not to use any sql (jpql) query
-        return null;
+        return userRepository.findUserDTOInterfaceByNameAndSecondName(name, secondName);
     }
 
     public List<FavoriteJourney> getFavoriteJourneys(String username) {
         User user = getDomainUser(username);
 
         // TODO 11.1: get the user's favorite journeys given the User (domain object)
-        List<FavoriteJourney> favoriteJourneys = new ArrayList<>(); //feed this list with the favorite journeys
+        List<FavoriteJourney> favoriteJourneys = favoriteJourneyRepository.findFavoriteJourneyByUser(user); //feed this list with the favorite journeys
         return favoriteJourneys;
     }
 
     public List<FavoriteJourneyDTO> getFavoriteJourneysDTO(String username) {
         User user = getDomainUser(username);
-        List<FavoriteJourney> favoriteJourneys = new ArrayList<>(); //Same as TODO 11.1: feed this list with the favorite journeys
+        List<FavoriteJourney> favoriteJourneys = favoriteJourneyRepository.findFavoriteJourneyByUser(user); //Same as TODO 11.1: feed this list with the favorite journeys
 
         return favoriteJourneys.stream().map(MapperHelper::favoriteJourneyToFavoriteJourneyDTO).toList();
     }
@@ -109,11 +110,17 @@ public class FcgUserService {
     //Adding a favorite journey to the user. We need to save a favorite journey that didn't exist before
     public void addUserFavoriteJourney(String username, FavoriteJourneyDTO favoriteJourneyDTO) {
         FavoriteJourney favoriteJourney = convertFavoriteJourneyDTO(username, favoriteJourneyDTO);
-
+        // FIXME: Have to solve and check it
         // TODO 19: explicitly save the journey. You can solve this exercise without leaving this file
+        Journey journey = favoriteJourney.getJourney();
+        journeyRepository.save(journey);
         // TODO 20: explicitly save the favorite journey. You can solve this exercise without leaving this file
+        favoriteJourneyRepository.save(favoriteJourney);
         // TODO 21: explicitly save all the dayTimeStarts of the favorite journey. You can solve this exercise without leaving this file
-        favoriteJourney.getDayTimeStarts(); /* do something here for each daytimeStarts*/
+        favoriteJourney.getDayTimeStarts()
+                .forEach(dayTimeStart -> {
+                    dayTimeStartRepository.save(dayTimeStart);
+                }); /* do something here for each daytimeStarts*/
     }
 
     private FavoriteJourney convertFavoriteJourneyDTO(String username, FavoriteJourneyDTO favoriteJourneyDTO) {
@@ -129,6 +136,7 @@ public class FcgUserService {
 
     public List<PopularDayOfWeek> getPopularDayOfWeek() {
         // TODO 18: get the most popular day of the week (PopularDayOfWeek) among the dayTimeStarts
-        return null;
+        // FIXME: Have to solve and check it
+        return dayTimeStartRepository.findPopularDayOfWeek();
     }
 }
